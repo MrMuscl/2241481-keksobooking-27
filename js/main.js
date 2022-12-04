@@ -1,3 +1,3 @@
 import {generateOffers} from './data.js';
 
-generateOffers();
+console.log(generateOffers());

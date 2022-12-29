@@ -30,13 +30,12 @@ const createElement = (element, value) =>{
   }
 };
 
-const createCardsLayout = (offers) =>{
-  const cardContainer = document.querySelector('.map__canvas');
+
+const createCardsFragment = (offers) =>{
+  const cardsFragment = document.createDocumentFragment();
   const cardTemplate = document.querySelector('#card')
     .content
     .querySelector('.popup');
-
-  const fragment = document.createDocumentFragment();
 
   for(const card of offers){
     const offerItem = cardTemplate.cloneNode(true);
@@ -71,9 +70,15 @@ const createCardsLayout = (offers) =>{
     }
 
     offerItem.querySelector('.popup__avatar').src = card.author.avatar;
-    fragment.append(offerItem);
+    cardsFragment.append(offerItem);
   }
-  cardContainer.append(fragment);
+  return cardsFragment;
 };
 
-export {createCardsLayout};
+const createCardsLayout = (offers) =>{
+  const cardContainer = document.querySelector('.map__canvas');
+  const cardsFragment = createCardsFragment(offers);
+  cardContainer.append(cardsFragment);
+};
+
+export {createCardsLayout, createCardsFragment};

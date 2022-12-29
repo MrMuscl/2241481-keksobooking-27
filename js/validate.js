@@ -6,7 +6,6 @@ const typeElement = adFormElement.querySelector('#type');
 const checkinElement = adFormElement.querySelector('#timein');
 const checkoutElement = adFormElement.querySelector('#timeout');
 
-
 const MAX_PRICE = 100000;
 
 const MIN_PRICES_FOR_TYPES = {
@@ -81,4 +80,4 @@ const initValidation = () => {
   };
 };
 
-export {initValidation};
+export {initValidation, validatePrice, getPriceErrorMessage, MAX_PRICE};

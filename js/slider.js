@@ -44,9 +44,10 @@ const initSlider = () => {
   sliderElement.noUiSlider.on('update', createSliderUpdateHandler());
 
   sliderElement.noUiSlider.on('change', () =>{
-    console.log('change');
     pristine.validate(priceElement);
   });
 };
 
-export {initSlider};
+const resetSlider = () => {sliderElement.noUiSlider.set(0);};
+
+export {initSlider, resetSlider};

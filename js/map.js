@@ -1,15 +1,19 @@
-import {makeActive} from './form.js';
+import {makeActive, resetFormElemenements} from './form.js';
 import {generateOffers} from './data.js';
 import {createCardsFragment} from './similar-list.js';
 
 const addressElement = document.querySelector('#address');
+const resetElement = document.querySelector('.ad-form__reset');
 
 const TOKIO_LATITUDE = 35.7197;
 const TOKIO_LONGITDE = 139.779;
 const MAP_ZOOM_FACTOR = 11;
 
+
+const setTokioCenterAddress = () => {addressElement.value = `${TOKIO_LATITUDE}, ${TOKIO_LONGITDE}`;};
+
 const initMap = () => {
-  addressElement.value = `${TOKIO_LATITUDE}, ${TOKIO_LONGITDE}`;
+  setTokioCenterAddress();
 
   const map = L.map('map-canvas')
     .on('load', () => {
@@ -56,7 +60,6 @@ const initMap = () => {
 
   mainMarker.addTo(map);
 
-  debugger;
   const cards = generateOffers();
   const cardsFragment = createCardsFragment(cards);
   for(let i = 0; i < cards.length; i++){
@@ -74,6 +77,22 @@ const initMap = () => {
       .addTo(map)
       .bindPopup(cardsFragment.children[i]);
   }
+
+  resetElement.addEventListener('click', (evt) => {
+    evt.preventDefault();
+
+    resetFormElemenements();
+    setTokioCenterAddress();
+
+    map.setView({
+      lat: TOKIO_LATITUDE,
+      lng: TOKIO_LONGITDE
+    }, MAP_ZOOM_FACTOR);
+
+    mainMarker.setLatLng([TOKIO_LATITUDE, TOKIO_LONGITDE]);
+
+  });
+
 };
 
 export {initMap};

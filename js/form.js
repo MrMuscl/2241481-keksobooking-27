@@ -1,7 +1,10 @@
+import {resetSlider} from './slider.js';
+
 const adFormElement = document.querySelector('.ad-form');
 const mapFormElement = document.querySelector('.map__filters');
 const offerFormFieldset = adFormElement.querySelectorAll('fieldset');
 const mapFormFieldset = mapFormElement.querySelectorAll('fieldset');
+const titleElement = adFormElement.querySelector('#title');
 
 const toggleFormDisabled = (form) => {
   const formCls = form.classList.toString().split(' ')[0];
@@ -34,4 +37,10 @@ const makeInactive = () => {
   disableElements(mapFormFieldset);
 };
 
-export {makeActive, makeInactive};
+const resetFormElemenements = () =>{
+  resetSlider();
+  titleElement.value = '';
+  adFormElement.reset();
+};
+
+export {makeActive, makeInactive, resetFormElemenements};

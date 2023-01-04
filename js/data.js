@@ -79,7 +79,7 @@ const createOffer = () => {
       price: getRandomPositiveInteger(MIN_PRICE, MAX_PRICE),
       type: getRandomArrayElement(HOUSING_TYPE),
       rooms: getRandomPositiveInteger(1, 3),
-      quests: getRandomPositiveInteger(1, 3),
+      guests: getRandomPositiveInteger(1, 3),
       checkin: getRandomArrayElement(TIME_VALUES),
       checkout: getRandomArrayElement(TIME_VALUES),
       features: FEATURES.slice(0, getRandomPositiveInteger(0, FEATURES.length)),

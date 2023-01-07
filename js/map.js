@@ -1,6 +1,7 @@
 import {makeActive, resetFormElemenements} from './form.js';
-import {generateOffers} from './data.js';
 import {createCardsFragment} from './similar-list.js';
+import {getData} from './api.js';
+import {showRecieveDataError} from './messages.js';
 
 const addressElement = document.querySelector('#address');
 const resetElement = document.querySelector('.ad-form__reset');
@@ -12,30 +13,10 @@ const MAP_ZOOM_FACTOR = 11;
 
 const setTokioCenterAddress = () => {addressElement.value = `${TOKIO_LATITUDE}, ${TOKIO_LONGITDE}`;};
 
-const initMap = () => {
-  setTokioCenterAddress();
+const map = L.map('map-canvas');
 
-  const map = L.map('map-canvas')
-    .on('load', () => {
-      makeActive();
-    })
-    .setView({
-      lat: TOKIO_LATITUDE,
-      lng: TOKIO_LONGITDE
-    }, MAP_ZOOM_FACTOR);
-
-  L.tileLayer(
-    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }
-  ).addTo(map);
-
-  const mainMarkerIcon = L.icon({
-    iconUrl: './img/main-pin.svg',
-    iconSize: [52, 52],
-    anchor: [26, 52]
-  });
+const createAdsMarkers = (cards) => {
+  cards = cards.slice(0, 10);
 
   const markerIcon = L.icon({
     iconUrl: './img/pin.svg',
@@ -43,24 +24,6 @@ const initMap = () => {
     anchor: [20, 40]
   });
 
-  const mainMarker = L.marker(
-    {
-      lat: TOKIO_LATITUDE,
-      lng: TOKIO_LONGITDE
-    },
-    {
-      draggable: true,
-      icon: mainMarkerIcon
-    });
-
-  mainMarker.on('move', (evt)=> {
-    const coordinates = evt.target.getLatLng();
-    addressElement.value = `${coordinates.lat.toFixed(5)}, ${coordinates.lng.toFixed(5)}`;
-  });
-
-  mainMarker.addTo(map);
-
-  const cards = generateOffers();
   const cardsFragment = createCardsFragment(cards);
   for(let i = 0; i < cards.length; i++){
     const marker = L.marker(
@@ -77,6 +40,60 @@ const initMap = () => {
       .addTo(map)
       .bindPopup(cardsFragment.children[i]);
   }
+};
+
+let mainMarker = null;
+const createMainMarker = () => {
+  const mainMarkerIcon = L.icon({
+    iconUrl: './img/main-pin.svg',
+    iconSize: [52, 52],
+    anchor: [26, 52]
+  });
+
+  mainMarker = L.marker(
+    {
+      lat: TOKIO_LATITUDE,
+      lng: TOKIO_LONGITDE
+    },
+    {
+      draggable: true,
+      icon: mainMarkerIcon
+    });
+
+  mainMarker.on('move', (evt)=> {
+    const coordinates = evt.target.getLatLng();
+    addressElement.value = `${coordinates.lat.toFixed(5)}, ${coordinates.lng.toFixed(5)}`;
+  });
+
+  mainMarker.addTo(map);
+};
+
+const initMap = () => {
+  setTokioCenterAddress();
+
+  map.on('load', () => {
+    makeActive();
+  })
+    .setView({
+      lat: TOKIO_LATITUDE,
+      lng: TOKIO_LONGITDE
+    }, MAP_ZOOM_FACTOR);
+
+  L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }
+  ).addTo(map);
+
+  getData(
+    (cards) => {
+      createAdsMarkers(cards);
+    },
+    () => showRecieveDataError()
+  );
+
+  createMainMarker();
 
   resetElement.addEventListener('click', (evt) => {
     evt.preventDefault();
@@ -90,7 +107,6 @@ const initMap = () => {
     }, MAP_ZOOM_FACTOR);
 
     mainMarker.setLatLng([TOKIO_LATITUDE, TOKIO_LONGITDE]);
-
   });
 
 };

@@ -1,3 +1,6 @@
+import {sendData} from './api.js';
+import {showErrorMessage, showSuccessMessage} from './messages.js';
+
 const adFormElement = document.querySelector('.ad-form');
 const priceElement = adFormElement.querySelector('#price');
 const roomNumberElement = adFormElement.querySelector('#room_number');
@@ -5,6 +8,7 @@ const capacityElement = adFormElement.querySelector('#capacity');
 const typeElement = adFormElement.querySelector('#type');
 const checkinElement = adFormElement.querySelector('#timein');
 const checkoutElement = adFormElement.querySelector('#timeout');
+const submitButtonElement = adFormElement.querySelector('.ad-form__submit');
 
 const MAX_PRICE = 100000;
 
@@ -31,6 +35,16 @@ const pristine = new Pristine(
     errorTextParent: 'ad-form__element'
   },
   true);
+
+const enableSubmitButton = () => {
+  submitButtonElement.disabled = true;
+  submitButtonElement.textContent = 'Опубиликовать';
+};
+
+const disableSubmitButton = () => {
+  submitButtonElement.disabled = false;
+  submitButtonElement.textContent = 'Публикую...';
+};
 
 const getGuestNumberErrorMessage = () =>{
   let guestWord = 'гостя';
@@ -70,11 +84,24 @@ const initValidation = () => {
   pristine.addValidator(priceElement, validatePrice, getPriceErrorMessage);
 
   window.onload = ()=>{
-    adFormElement.addEventListener('submit', (e) => {
-      e.preventDefault();
+    adFormElement.addEventListener('submit', (evt) => {
+      evt.preventDefault();
+
+      const formData = new FormData(evt.target);
+
       const valid = pristine.validate();
       if (valid){
-        adFormElement.submit();
+        disableSubmitButton();
+        sendData(
+          () => {
+            enableSubmitButton();
+            showSuccessMessage();
+          },
+          () => {
+            showErrorMessage();
+          },
+          formData
+        );
       }
     });
   };

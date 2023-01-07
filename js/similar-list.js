@@ -49,25 +49,30 @@ const createCardsFragment = (offers) =>{
 
     const featuresElement = offerItem.querySelector('.popup__features');
     featuresElement.innerHTML = '';
-    for(const feature of card.offer.features){
-      const liElement = document.createElement('li');
-      liElement.classList.add('popup__feature');
-      liElement.classList.add(`popup__feature--${feature}`);
-      featuresElement.append(liElement);
+    if (card.offer.features){
+      for(const feature of card.offer.features){
+        const liElement = document.createElement('li');
+        liElement.classList.add('popup__feature');
+        liElement.classList.add(`popup__feature--${feature}`);
+        featuresElement.append(liElement);
+      }
     }
 
     createElement(offerItem.querySelector('.popup__description'), card.offer.description);
     const picturesContainer = offerItem.querySelector('.popup__photos');
     picturesContainer.innerHTML = '';
-    for(const photo of card.offer.photos){
-      const picture = document.createElement('img');
-      picture.classList.add('popup__photo');
-      picture.width = 45;
-      picture.height = 40;
-      picture.alt = 'Фотография жилья';
-      picture.src = photo;
-      picturesContainer.append(picture);
+    if (card.offer.photos){
+      for(const photo of card.offer.photos){
+        const picture = document.createElement('img');
+        picture.classList.add('popup__photo');
+        picture.width = 45;
+        picture.height = 40;
+        picture.alt = 'Фотография жилья';
+        picture.src = photo;
+        picturesContainer.append(picture);
+      }
     }
+
 
     offerItem.querySelector('.popup__avatar').src = card.author.avatar;
     cardsFragment.append(offerItem);
@@ -75,10 +80,4 @@ const createCardsFragment = (offers) =>{
   return cardsFragment;
 };
 
-const createCardsLayout = (offers) =>{
-  const cardContainer = document.querySelector('.map__canvas');
-  const cardsFragment = createCardsFragment(offers);
-  cardContainer.append(cardsFragment);
-};
-
-export {createCardsLayout, createCardsFragment};
+export {createCardsFragment};

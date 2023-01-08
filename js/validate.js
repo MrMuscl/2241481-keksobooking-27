@@ -1,4 +1,5 @@
 import {sendData} from './api.js';
+import {resetFormElemenements} from './form.js';
 import {showErrorMessage, showSuccessMessage} from './messages.js';
 
 const adFormElement = document.querySelector('.ad-form');
@@ -38,7 +39,7 @@ const pristine = new Pristine(
 
 const enableSubmitButton = () => {
   submitButtonElement.disabled = true;
-  submitButtonElement.textContent = 'Опубиликовать';
+  submitButtonElement.textContent = 'Опубликовать';
 };
 
 const disableSubmitButton = () => {
@@ -62,16 +63,43 @@ const getGuestNumberErrorMessage = () =>{
 const validatePrice = (value) => value >= MIN_PRICES_FOR_TYPES[typeElement.value] && value <= MAX_PRICE;
 const validateCapacity = () => roomToGuests[roomNumberElement.value].includes(capacityElement.value);
 
-const capacityChangeHandler = () =>{
+const capacityChangeHandler = () => {
   pristine.validate(capacityElement);
   pristine.validate(roomNumberElement);
 };
 
 const getPriceErrorMessage = () => `От ${MIN_PRICES_FOR_TYPES[typeElement.value]} до ${MAX_PRICE} рублей`;
 
-const typeChangeHandler = () =>{
+const typeChangeHandler = () => {
   priceElement.placeholder = MIN_PRICES_FOR_TYPES[typeElement.value];
   pristine.validate(priceElement);
+};
+
+const setSubmitHandler = () => {
+  console.log('setSubmitHandler')
+  adFormElement.addEventListener('submit', (evt) =>{
+    console.log('submit');
+    evt.preventDefault();
+
+    const formData = new FormData(evt.target);
+    const valid = pristine.validate();
+    console.log(valid);
+    if (valid){
+      disableSubmitButton();
+      sendData(
+        () => {
+          //showSuccessMessage();
+          enableSubmitButton();
+          resetFormElemenements();
+        },
+        () => {
+          showErrorMessage();
+          enableSubmitButton();
+        },
+        formData
+      );
+    }
+  });
 };
 
 const initValidation = () => {
@@ -83,28 +111,11 @@ const initValidation = () => {
   pristine.addValidator(capacityElement, validateCapacity, getGuestNumberErrorMessage);
   pristine.addValidator(priceElement, validatePrice, getPriceErrorMessage);
 
-  window.onload = ()=>{
-    adFormElement.addEventListener('submit', (evt) => {
-      evt.preventDefault();
-
-      const formData = new FormData(evt.target);
-
-      const valid = pristine.validate();
-      if (valid){
-        disableSubmitButton();
-        sendData(
-          () => {
-            enableSubmitButton();
-            showSuccessMessage();
-          },
-          () => {
-            showErrorMessage();
-          },
-          formData
-        );
-      }
-    });
-  };
+  setSubmitHandler();
 };
 
-export {initValidation, validatePrice, getPriceErrorMessage, MAX_PRICE};
+export {initValidation,
+  validatePrice,
+  getPriceErrorMessage,
+  setSubmitHandler,
+  MAX_PRICE};

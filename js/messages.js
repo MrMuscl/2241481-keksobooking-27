@@ -1,3 +1,6 @@
+import {resetFormElemenements} from './form.js';
+
+
 const hideSuccessMessage = () => {
   const successElement = document.querySelector('.success');
   if (successElement){
@@ -35,6 +38,7 @@ const showSuccessMessage = () => {
   document.body.append(successMessage);
   document.addEventListener('keydown', documentKeydownHandler);
   document.addEventListener('click', documentClickHandler);
+  resetFormElemenements();
 };
 
 const showErrorMessage = () => {

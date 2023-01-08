@@ -1,4 +1,7 @@
+import {resetAvatarAndPhotos} from './avatar.js';
+import {setTokioCenterAddress} from './map.js';
 import {resetSlider} from './slider.js';
+//import {setSubmitHandler} from './validate.js';
 
 const adFormElement = document.querySelector('.ad-form');
 const mapFormElement = document.querySelector('.map__filters');
@@ -41,6 +44,9 @@ const resetFormElemenements = () =>{
   resetSlider();
   titleElement.value = '';
   adFormElement.reset();
+  setTokioCenterAddress();
+  //setSubmitHandler();
+  resetAvatarAndPhotos();
 };
 
 export {makeActive, makeInactive, resetFormElemenements};

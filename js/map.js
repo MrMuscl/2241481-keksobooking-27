@@ -111,4 +111,4 @@ const initMap = () => {
 
 };
 
-export {initMap};
+export {initMap, setTokioCenterAddress};

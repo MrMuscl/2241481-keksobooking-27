@@ -12,6 +12,7 @@ const checkoutElement = adFormElement.querySelector('#timeout');
 const submitButtonElement = adFormElement.querySelector('.ad-form__submit');
 
 const MAX_PRICE = 100000;
+const IMAGE_FILE_TYPES = ['jpeg', 'jpg', 'png'];
 
 const MIN_PRICES_FOR_TYPES = {
   'bungalow': 0,
@@ -27,6 +28,12 @@ const roomToGuests = {
   3: ['1', '2', '3'],
   100: ['0']
 };
+
+const isImageFileType = (file) => {
+  const fileName = file.name.toLowerCase();
+  return IMAGE_FILE_TYPES.some((it) => fileName.endsWith(it));
+};
+
 
 const pristine = new Pristine(
   adFormElement,
@@ -76,7 +83,7 @@ const typeChangeHandler = () => {
 };
 
 const setSubmitHandler = () => {
-  console.log('setSubmitHandler')
+  console.log('setSubmitHandler');
   adFormElement.addEventListener('submit', (evt) =>{
     console.log('submit');
     evt.preventDefault();
@@ -88,7 +95,7 @@ const setSubmitHandler = () => {
       disableSubmitButton();
       sendData(
         () => {
-          //showSuccessMessage();
+          showSuccessMessage();
           enableSubmitButton();
           resetFormElemenements();
         },
@@ -118,4 +125,5 @@ export {initValidation,
   validatePrice,
   getPriceErrorMessage,
   setSubmitHandler,
+  isImageFileType,
   MAX_PRICE};

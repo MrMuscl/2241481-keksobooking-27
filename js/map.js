@@ -14,6 +14,7 @@ const MAP_ZOOM_FACTOR = 11;
 const setTokioCenterAddress = () => {addressElement.value = `${TOKIO_LATITUDE}, ${TOKIO_LONGITDE}`;};
 
 const map = L.map('map-canvas');
+const markerGroup = L.layerGroup().addTo(map);
 
 const createAdsMarkers = (cards) => {
   cards = cards.slice(0, 10);
@@ -36,8 +37,9 @@ const createAdsMarkers = (cards) => {
         icon: markerIcon
       }
     );
+
     marker
-      .addTo(map)
+      .addTo(markerGroup)
       .bindPopup(cardsFragment.children[i]);
   }
 };
@@ -90,7 +92,7 @@ const initMap = () => {
     (cards) => {
       createAdsMarkers(cards);
     },
-    () => showRecieveDataError()
+    showRecieveDataError
   );
 
   createMainMarker();

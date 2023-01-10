@@ -45,7 +45,7 @@ const resetFormElemenements = () =>{
   titleElement.value = '';
   adFormElement.reset();
   setTokioCenterAddress();
-  setSubmitHandler();
+  //setSubmitHandler();
   resetAvatarAndPhotos();
 };
 

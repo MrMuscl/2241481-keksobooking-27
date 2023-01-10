@@ -1,40 +1,42 @@
 import {resetFormElemenements} from './form.js';
+import {enableSubmitButton} from './validate.js';
 
+const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
+const successMessage = successMessageTemplate.cloneNode(true);
+const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
+const errorMessage = errorMessageTemplate.cloneNode(true);
+const errorButtonElement = document.querySelector('.error__button');
 
 const hideSuccessMessage = () => {
-  const successElement = document.querySelector('.success');
-  if (successElement){
-    successElement.remove();
-  }
+  successMessage.remove();
 };
 
 const hideErrorMessage = () => {
-  const errorElement = document.querySelector('.error');
-  if (errorElement){
-    errorElement.remove();
-  }
+  errorMessage.remove();
 };
 
 const documentClickHandler = () => {
   hideErrorMessage();
   hideSuccessMessage();
   document.removeEventListener('click', documentClickHandler);
+  document.removeEventListener('keydown', documentKeydownHandler);
 };
 
-const documentKeydownHandler = (evt) => {
+function documentKeydownHandler(evt){
   if (evt.key === 'Escape'){
     hideErrorMessage();
     hideSuccessMessage();
     document.removeEventListener('click', documentClickHandler);
     document.removeEventListener('keydown', documentKeydownHandler);
   }
+}
+
+const errorButtonClickHandler = () => {
+  hideErrorMessage();
+  enableSubmitButton();
 };
 
-const errorButtonClickHandler = () => {};
-
 const showSuccessMessage = () => {
-  const messageTemplate = document.querySelector('#success').content;
-  const successMessage = messageTemplate.cloneNode(true);
   document.body.append(successMessage);
   document.addEventListener('keydown', documentKeydownHandler);
   document.addEventListener('click', documentClickHandler);
@@ -42,13 +44,9 @@ const showSuccessMessage = () => {
 };
 
 const showErrorMessage = () => {
-  const messageTemplate = document.querySelector('#error').content;
-  const successMessage = messageTemplate.cloneNode(true);
-  document.body.append(successMessage);
+  document.body.append(errorMessage);
   document.addEventListener('keydown', documentKeydownHandler);
   document.addEventListener('click', documentClickHandler);
-
-  const errorButtonElement = document.querySelector('.error__button');
   errorButtonElement.addEventListener('click', errorButtonClickHandler);
 };
 

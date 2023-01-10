@@ -45,12 +45,14 @@ const pristine = new Pristine(
   true);
 
 const enableSubmitButton = () => {
-  submitButtonElement.disabled = true;
+  console.log('Enable button');
+  submitButtonElement.disabled = false;
   submitButtonElement.textContent = 'Опубликовать';
 };
 
 const disableSubmitButton = () => {
-  submitButtonElement.disabled = false;
+  console.log('Disable button');
+  submitButtonElement.disabled = true;
   submitButtonElement.textContent = 'Публикую...';
 };
 
@@ -83,14 +85,11 @@ const typeChangeHandler = () => {
 };
 
 const setSubmitHandler = () => {
-  console.log('setSubmitHandler');
   adFormElement.addEventListener('submit', (evt) =>{
-    console.log('submit');
     evt.preventDefault();
 
     const formData = new FormData(evt.target);
     const valid = pristine.validate();
-    console.log(valid);
     if (valid){
       disableSubmitButton();
       sendData(
@@ -100,6 +99,7 @@ const setSubmitHandler = () => {
           resetFormElemenements();
         },
         () => {
+          debugger;
           showErrorMessage();
           enableSubmitButton();
         },
@@ -124,6 +124,7 @@ const initValidation = () => {
 export {initValidation,
   validatePrice,
   getPriceErrorMessage,
+  enableSubmitButton,
   setSubmitHandler,
   isImageFileType,
   MAX_PRICE};

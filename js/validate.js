@@ -99,7 +99,6 @@ const setSubmitHandler = () => {
           resetFormElemenements();
         },
         () => {
-          debugger;
           showErrorMessage();
           enableSubmitButton();
         },

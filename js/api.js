@@ -1,5 +1,5 @@
 const DOWNLOAD_URL = 'https://27.javascript.pages.academy/keksobooking/data';
-const UPLOAD_URL = 'https://27.javascript.pages.academy/keksobooking1';
+const UPLOAD_URL = 'https://27.javascript.pages.academy/keksobooking';
 
 const getData = (onSuccess, onError) =>{
   fetch(DOWNLOAD_URL)
@@ -24,18 +24,11 @@ const sendData = (onSuccess, onError, body) => {
     })
     .then((responce) => {
       if (responce.ok){
-        console.log('fetch sendData success');
         onSuccess();
       } else {
-        console.log('fetch sendData error');
         onError();
       }
-    })
-    .catch(() => {
-      console.log('fetch caught error');
-      //onError();
     });
-    console.log('sendData completed');
 };
 
 export {getData, sendData};

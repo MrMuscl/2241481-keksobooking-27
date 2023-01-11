@@ -1,4 +1,4 @@
-import {makeActive, resetFormElemenements} from './form.js';
+import {enableFilters, makeActive, resetFormElemenements} from './form.js';
 import {createCardsFragment} from './similar-list.js';
 import {getData} from './api.js';
 import {showRecieveDataError} from './messages.js';
@@ -14,6 +14,12 @@ const MAP_ZOOM_FACTOR = 11;
 const setTokioCenterAddress = () => {addressElement.value = `${TOKIO_LATITUDE}, ${TOKIO_LONGITDE}`;};
 
 const map = L.map('map-canvas');
+L.tileLayer(
+  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  }
+).addTo(map);
 const markerGroup = L.layerGroup().addTo(map);
 
 const createAdsMarkers = (cards) => {
@@ -70,32 +76,29 @@ const createMainMarker = () => {
   mainMarker.addTo(map);
 };
 
-const initMap = () => {
-  setTokioCenterAddress();
-
-  map.on('load', () => {
-    makeActive();
-  })
-    .setView({
-      lat: TOKIO_LATITUDE,
-      lng: TOKIO_LONGITDE
-    }, MAP_ZOOM_FACTOR);
-
-  L.tileLayer(
-    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }
-  ).addTo(map);
-
+const mapLoadHandler = () => {
+  console.log('Map loaded');
+  debugger;
+  makeActive();
+  createMainMarker();
   getData(
     (cards) => {
       createAdsMarkers(cards);
+      enableFilters();
     },
     showRecieveDataError
   );
+};
 
-  createMainMarker();
+const initMap = () => {
+  setTokioCenterAddress();
+
+  map.on('load', mapLoadHandler);
+
+  map.setView({
+    lat: TOKIO_LATITUDE,
+    lng: TOKIO_LONGITDE
+  }, MAP_ZOOM_FACTOR);
 
   resetElement.addEventListener('click', (evt) => {
     evt.preventDefault();

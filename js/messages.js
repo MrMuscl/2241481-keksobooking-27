@@ -5,7 +5,6 @@ const successMessageTemplate = document.querySelector('#success').content.queryS
 const successMessage = successMessageTemplate.cloneNode(true);
 const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
 const errorMessage = errorMessageTemplate.cloneNode(true);
-const errorButtonElement = document.querySelector('.error__button');
 
 const hideSuccessMessage = () => {
   successMessage.remove();
@@ -44,6 +43,7 @@ const showSuccessMessage = () => {
 };
 
 const showErrorMessage = () => {
+  const errorButtonElement = document.querySelector('.error__button');
   document.body.append(errorMessage);
   document.addEventListener('keydown', documentKeydownHandler);
   document.addEventListener('click', documentClickHandler);
@@ -61,7 +61,7 @@ const showRecieveDataError = () => {
   alertContainer.style.fontSize = '30px';
   alertContainer.style.textAlign = 'center';
   alertContainer.style.backgroundColor = 'red';
-  alertContainer.textContent = 'Не удалось получить данные с сервера';
+  alertContainer.textContent = 'Не удалось загрузить объявления';
   document.body.append(alertContainer);
 };
 

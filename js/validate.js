@@ -45,13 +45,11 @@ const pristine = new Pristine(
   true);
 
 const enableSubmitButton = () => {
-  console.log('Enable button');
   submitButtonElement.disabled = false;
   submitButtonElement.textContent = 'Опубликовать';
 };
 
 const disableSubmitButton = () => {
-  console.log('Disable button');
   submitButtonElement.disabled = true;
   submitButtonElement.textContent = 'Публикую...';
 };

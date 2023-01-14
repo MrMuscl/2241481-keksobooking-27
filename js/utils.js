@@ -1,3 +1,14 @@
+const DEBOUNCE_DELAY = 500;
+
+const debounce = (callback, delay) => {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), delay);
+  };
+};
+
 const getRandomPositiveInteger = (a, b) =>{
   if (typeof a !== 'number' || typeof b !== 'number' || a < 0 || b < 0){
     return NaN;
@@ -34,4 +45,10 @@ const createIdGenerator = function(counter){
   };
 };
 
-export {getRandomPositiveInteger, getRandomPositiveFloat, getRandomArrayElement, createIdGenerator}
+export {getRandomPositiveInteger,
+  getRandomPositiveFloat,
+  getRandomArrayElement,
+  createIdGenerator,
+  debounce,
+  DEBOUNCE_DELAY
+};

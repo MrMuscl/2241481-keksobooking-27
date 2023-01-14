@@ -36,9 +36,8 @@ const disableFilters = () => {
 };
 
 const makeActive = () => {
-  //toggleFormDisabled(filterFormElement);
+
   toggleFormDisabled(adFormElement);
-  //enableElements(filterFormFieldset);
   enableElements(offerFormFieldset);
 };
 

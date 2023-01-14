@@ -2,6 +2,8 @@ import {enableFilters, makeActive, resetFormElemenements} from './form.js';
 import {createCardsFragment} from './similar-list.js';
 import {getData} from './api.js';
 import {showRecieveDataError} from './messages.js';
+import {filterOffers, MAX_OFFERS_COUNT, setFiltersChangedHandler} from './filters.js';
+import {debounce, DEBOUNCE_DELAY} from './utils.js';
 
 const addressElement = document.querySelector('#address');
 const resetElement = document.querySelector('.ad-form__reset');
@@ -9,7 +11,6 @@ const resetElement = document.querySelector('.ad-form__reset');
 const TOKIO_LATITUDE = 35.7197;
 const TOKIO_LONGITDE = 139.779;
 const MAP_ZOOM_FACTOR = 11;
-
 
 const setTokioCenterAddress = () => {addressElement.value = `${TOKIO_LATITUDE}, ${TOKIO_LONGITDE}`;};
 
@@ -22,9 +23,9 @@ L.tileLayer(
 ).addTo(map);
 const markerGroup = L.layerGroup().addTo(map);
 
-const createAdsMarkers = (cards) => {
-  cards = cards.slice(0, 10);
+const removeAdsMarkers = () => markerGroup.clearLayers();
 
+const createAdsMarkers = (cards) => {
   const markerIcon = L.icon({
     iconUrl: './img/pin.svg',
     iconSize: [40, 40],
@@ -77,13 +78,17 @@ const createMainMarker = () => {
 };
 
 const mapLoadHandler = () => {
-  console.log('Map loaded');
-  debugger;
   makeActive();
   createMainMarker();
   getData(
     (cards) => {
-      createAdsMarkers(cards);
+      createAdsMarkers(cards.slice(0, MAX_OFFERS_COUNT));
+      setFiltersChangedHandler(
+        debounce(()=> {
+          removeAdsMarkers();
+          createAdsMarkers(filterOffers(cards));
+        }, DEBOUNCE_DELAY)
+      );
       enableFilters();
     },
     showRecieveDataError
@@ -113,7 +118,8 @@ const initMap = () => {
 
     mainMarker.setLatLng([TOKIO_LATITUDE, TOKIO_LONGITDE]);
   });
-
 };
 
-export {initMap, setTokioCenterAddress};
+export {initMap,
+  setTokioCenterAddress,
+  removeAdsMarkers};

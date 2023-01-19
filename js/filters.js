@@ -11,7 +11,10 @@ const MIDDLE_PRICE = 10000;
 const HIGH_PRICE = 50000;
 const MAX_OFFERS_COUNT = 10;
 
-const resetFilters = () => filtersForm.reset();
+const resetFilters = () => {
+  filtersForm.reset();
+  removeAdsMarkers();
+};
 
 const setFiltersChangedHandler = (cb) => {
   filtersForm.addEventListener('change', ()=>{

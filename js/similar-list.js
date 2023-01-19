@@ -1,4 +1,4 @@
-const HousingTypeMap = {
+const HOUSING_TYPE = {
   flat: 'Квартира',
   bungalow: 'Бунгало',
   house: 'Дом',
@@ -43,7 +43,7 @@ const createCardsFragment = (offers) =>{
     createElement(offerItem.querySelector('.popup__title'), card.offer.title);
     createElement(offerItem.querySelector('.popup__text--address'), card.offer.address);
     createElement(offerItem.querySelector('.popup__text--price'), `${card.offer.price} ₽/ночь`);
-    createElement(offerItem.querySelector('.popup__type'), HousingTypeMap[card.offer.type]);
+    createElement(offerItem.querySelector('.popup__type'), HOUSING_TYPE[card.offer.type]);
     createElement(offerItem.querySelector('.popup__text--time'), `Заезд после ${card.offer.checkin}, выезд до ${card.offer.checkout}`);
     createElement(offerItem.querySelector('.popup__text--capacity'), buildCapacityString(card.offer.guests, card.offer.rooms));
 

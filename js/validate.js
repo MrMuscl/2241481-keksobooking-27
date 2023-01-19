@@ -1,5 +1,7 @@
 import {sendData} from './api.js';
+import {resetFilters} from './filters.js';
 import {resetFormElemenements} from './form.js';
+import {createInitialMarkers} from './map.js';
 import {showErrorMessage, showSuccessMessage} from './messages.js';
 
 const adFormElement = document.querySelector('.ad-form');
@@ -95,6 +97,8 @@ const setSubmitHandler = () => {
           showSuccessMessage();
           enableSubmitButton();
           resetFormElemenements();
+          resetFilters();
+          createInitialMarkers();
         },
         () => {
           showErrorMessage();

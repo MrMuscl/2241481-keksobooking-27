@@ -2,8 +2,9 @@ import {enableFilters, makeActive, resetFormElemenements} from './form.js';
 import {createCardsFragment} from './similar-list.js';
 import {getData} from './api.js';
 import {showRecieveDataError} from './messages.js';
-import {filterOffers, MAX_OFFERS_COUNT, setFiltersChangedHandler} from './filters.js';
+import {filterOffers, MAX_OFFERS_COUNT, resetFilters, setFiltersChangedHandler} from './filters.js';
 import {debounce, DEBOUNCE_DELAY} from './utils.js';
+
 
 const addressElement = document.querySelector('#address');
 const resetElement = document.querySelector('.ad-form__reset');
@@ -12,7 +13,6 @@ const TOKIO_LATITUDE = 35.7197;
 const TOKIO_LONGITDE = 139.779;
 const MAP_ZOOM_FACTOR = 11;
 
-const setTokioCenterAddress = () => {addressElement.value = `${TOKIO_LATITUDE}, ${TOKIO_LONGITDE}`;};
 
 const map = L.map('map-canvas');
 L.tileLayer(
@@ -77,9 +77,15 @@ const createMainMarker = () => {
   mainMarker.addTo(map);
 };
 
+const setTokioCenterAddress = () => {
+  mainMarker.setLatLng([TOKIO_LATITUDE, TOKIO_LONGITDE]);
+  addressElement.value = `${TOKIO_LATITUDE}, ${TOKIO_LONGITDE}`;
+};
+
 const mapLoadHandler = () => {
   makeActive();
   createMainMarker();
+  setTokioCenterAddress();
   getData(
     (cards) => {
       createAdsMarkers(cards.slice(0, MAX_OFFERS_COUNT));
@@ -95,9 +101,11 @@ const mapLoadHandler = () => {
   );
 };
 
-const initMap = () => {
-  setTokioCenterAddress();
+const createInitialMarkers = () =>{
+  getData((cards) => createAdsMarkers(cards.slice(0, MAX_OFFERS_COUNT)));
+};
 
+const initMap = () => {
   map.on('load', mapLoadHandler);
 
   map.setView({
@@ -110,16 +118,18 @@ const initMap = () => {
 
     resetFormElemenements();
     setTokioCenterAddress();
+    resetFilters();
+    createInitialMarkers();
 
     map.setView({
       lat: TOKIO_LATITUDE,
       lng: TOKIO_LONGITDE
     }, MAP_ZOOM_FACTOR);
-
-    mainMarker.setLatLng([TOKIO_LATITUDE, TOKIO_LONGITDE]);
   });
 };
 
+
 export {initMap,
   setTokioCenterAddress,
-  removeAdsMarkers};
+  removeAdsMarkers,
+  createInitialMarkers};
